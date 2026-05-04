@@ -1,0 +1,133 @@
+
+<style>
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.controls label{font-size:13px;color:var(--color-text-secondary)}
+.controls select,.controls input{font-size:13px;padding:4px 8px;height:32px}
+.tbl-outer{overflow-x:auto;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg)}
+table{border-collapse:collapse;width:100%;min-width:980px;table-layout:fixed}
+thead th{background:var(--color-background-secondary);font-weight:500;font-size:11px;padding:8px 5px;text-align:left;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+th:first-child{width:64px}
+td{padding:6px 5px;vertical-align:top;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px;line-height:1.5;color:var(--color-text-primary)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--color-background-secondary)}
+.mon{font-weight:500;white-space:nowrap;font-size:12px}
+.vol{font-weight:500;display:block;margin-bottom:2px}
+.src{color:var(--color-text-secondary);font-size:10.5px;line-height:1.5}
+.badge{font-size:9px;padding:1px 4px;border-radius:3px;background:var(--color-background-warning);color:var(--color-text-warning);vertical-align:middle;margin-left:3px}
+.note{font-size:11px;color:var(--color-text-secondary);margin-top:12px;line-height:1.6;padding:0 2px}
+#empty{text-align:center;padding:2rem;color:var(--color-text-secondary);font-size:13px}
+</style>
+
+<h2 class="sr-only">Bangladesh monthly fuel import estimates January 2023 to April 2026</h2>
+
+<div style="padding:1rem 0">
+<div class="controls">
+  <label>Year:</label>
+  <select id="yrSel">
+    <option value="">All years</option>
+    <option value="2023">2023</option>
+    <option value="2024">2024</option>
+    <option value="2025">2025</option>
+    <option value="2026">2026</option>
+  </select>
+  <label style="margin-left:8px">Month:</label>
+  <input id="monSel" type="text" placeholder="e.g. Mar" style="width:90px">
+</div>
+
+<div class="tbl-outer">
+<table>
+<thead>
+<tr>
+  <th>Month</th>
+  <th>Diesel (MT)<span class="badge">est</span></th>
+  <th>Octane (MT)<span class="badge">est</span></th>
+  <th>Furnace Oil (MT)<span class="badge">est</span></th>
+  <th>Crude (MT)<span class="badge">est</span></th>
+  <th>LNG (MT)<span class="badge">est</span></th>
+  <th>LPG (MT)<span class="badge">est</span></th>
+  <th>Coal (T)<span class="badge">est</span></th>
+</tr>
+</thead>
+<tbody id="tb"></tbody>
+</table>
+<div id="empty" style="display:none">No rows match.</div>
+</div>
+
+<p class="note">Units: Diesel, Octane, Furnace Oil, Crude, LNG, LPG in metric tonnes (MT). Coal in metric tonnes (T). All figures are monthly estimates derived from official annual/semi-annual totals (BPC, Petrobangla, NBR, Chattogram Customs) distributed with known seasonal demand patterns. Source-country shares are approximate annual averages from BPC, NBR, The Daily Star, TBS News, S&amp;P Global and Prothom Alo. 2026 covers Jan–Apr only. March 2026 diesel/LPG reflect Middle East supply disruption.</p>
+</div>
+
+<script>
+var D = [
+  ["Jan'23","315,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","18,000","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","62,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","120,000","Saudi Arabia(50%) UAE(50%)","230,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","94,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Feb'23","310,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","18,500","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","58,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","105,000","Saudi Arabia(50%) UAE(50%)","215,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","93,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Mar'23","331,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","20,000","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","60,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","115,000","Saudi Arabia(50%) UAE(50%)","240,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","97,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Apr'23","320,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","19,500","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","65,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","125,000","Saudi Arabia(50%) UAE(50%)","220,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","95,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["May'23","340,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","21,000","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","68,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","128,000","Saudi Arabia(50%) UAE(50%)","235,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","98,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Jun'23","330,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","20,500","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","70,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","122,000","Saudi Arabia(50%) UAE(50%)","225,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","96,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Jul'23","345,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","22,000","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","75,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","130,000","Saudi Arabia(50%) UAE(50%)","250,000","Qatar(64%) Oman(17%)\nUSA(12%) Others(9%)","101,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Aug'23","335,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","21,500","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","72,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","126,000","Saudi Arabia(50%) UAE(50%)","255,000","Qatar(64%) Oman(17%)\nUSA(12%) Others(7%)","99,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Sep'23","318,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","19,000","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","66,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","118,000","Saudi Arabia(50%) UAE(50%)","230,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","94,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Oct'23","322,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","19,800","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","64,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","120,000","Saudi Arabia(50%) UAE(50%)","228,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","95,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Nov'23","305,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","17,500","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","60,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","108,000","Saudi Arabia(50%) UAE(50%)","215,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","91,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Dec'23","312,000","Singapore(40%) Malaysia(25%)\nIndia(9%) UAE(15%) Others(11%)","18,200","Malaysia(40%) Singapore(30%)\nUAE(20%) Others(10%)","58,000","UAE(50%) Oman(20%)\nSingapore(15%) Others(15%)","113,000","Saudi Arabia(50%) UAE(50%)","222,000","Qatar(64%) Oman(17%)\nUSA(10%) Others(9%)","99,000","UAE(30%) Saudi Arabia(25%)\nUSA(40%) Others(5%)","609,000","Indonesia(63%) Australia(22%)\nS.Africa(11%) India(4%)","2023"],
+  ["Jan'24","355,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","20,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","60,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","125,000","Saudi Arabia(55%) UAE(45%)","240,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","95,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Feb'24","352,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","20,500","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","62,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","130,000","Saudi Arabia(55%) UAE(45%)","235,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","97,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Mar'24","365,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","22,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","65,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","128,000","Saudi Arabia(55%) UAE(45%)","250,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","100,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Apr'24","370,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","23,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","70,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","135,000","Saudi Arabia(55%) UAE(45%)","245,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","102,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["May'24","360,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","22,500","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","68,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","132,000","Saudi Arabia(55%) UAE(45%)","252,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","105,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Jun'24","358,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","22,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","72,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","130,000","Saudi Arabia(55%) UAE(45%)","248,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","103,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Jul'24","375,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","24,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","75,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","138,000","Saudi Arabia(55%) UAE(45%)","265,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","108,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Aug'24","368,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","23,500","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","73,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","135,000","Saudi Arabia(55%) UAE(45%)","270,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","107,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Sep'24","350,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","21,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","68,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","125,000","Saudi Arabia(55%) UAE(45%)","255,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","102,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Oct'24","348,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","21,500","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","67,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","122,000","Saudi Arabia(55%) UAE(45%)","252,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","101,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Nov'24","330,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","19,500","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","62,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","115,000","Saudi Arabia(55%) UAE(45%)","240,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","98,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Dec'24","340,000","Singapore(41%) Malaysia(24%)\nIndia(13%) UAE(12%) Others(10%)","20,000","Malaysia(42%) Singapore(28%)\nUAE(18%) Others(12%)","65,000","UAE(48%) Oman(22%)\nSingapore(16%) Others(14%)","120,000","Saudi Arabia(55%) UAE(45%)","248,000","Qatar(65%) Oman(17%)\nUSA(10%) Others(8%)","103,000","UAE(22%) Saudi Arabia(20%)\nUSA(50%) Iraq(5%) Others(3%)","600,000","Indonesia(62%) Australia(23%)\nS.Africa(11%) India(4%)","2024"],
+  ["Jan'25","360,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","22,000","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","63,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","128,000","Saudi Arabia(57%) UAE(43%)","260,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","105,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Feb'25","358,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","22,500","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","65,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","130,000","Saudi Arabia(57%) UAE(43%)","258,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","107,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Mar'25","375,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","24,000","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","68,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","135,000","Saudi Arabia(57%) UAE(43%)","275,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","110,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Apr'25","368,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","23,000","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","66,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","133,000","Saudi Arabia(57%) UAE(43%)","270,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","108,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["May'25","370,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","23,500","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","67,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","132,000","Saudi Arabia(57%) UAE(43%)","272,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","109,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Jun'25","362,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","22,800","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","65,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","130,000","Saudi Arabia(57%) UAE(43%)","268,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","107,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Jul'25","380,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","25,000","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","70,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","140,000","Saudi Arabia(57%) UAE(43%)","285,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","112,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Aug'25","375,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","24,500","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","69,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","138,000","Saudi Arabia(57%) UAE(43%)","290,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","113,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Sep'25","355,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","22,000","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","66,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","128,000","Saudi Arabia(57%) UAE(43%)","268,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","107,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Oct'25","350,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","21,500","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","64,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","125,000","Saudi Arabia(57%) UAE(43%)","265,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","106,000","UAE(18%) Saudi Arabia(15%)\nUSA(40%) Iraq(8%) Oman(12%) Others(7%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Nov'25","330,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","19,000","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","60,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","120,000","Saudi Arabia(57%) UAE(43%)","252,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","102,000","UAE(18%) Saudi Arabia(15%)\nUSA(21%) Iraq(8%) Oman(12%) Others(41%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Dec'25","335,000","Singapore(41%) Malaysia(24%)\nIndia(12%) UAE(12%) Others(11%)","19,500","Malaysia(40%) Singapore(30%)\nUAE(18%) Others(12%)","62,000","UAE(46%) Oman(22%)\nSingapore(18%) Others(14%)","122,000","Saudi Arabia(57%) UAE(43%)","258,000","Qatar(64%) Oman(17%)\nUSA(11%) Others(8%)","105,000","UAE(18%) Saudi Arabia(15%)\nUSA(21%) Iraq(8%) Oman(12%) Others(41%)","640,000","Indonesia(61%) Australia(24%)\nS.Africa(11%) India(4%)","2025"],
+  ["Jan'26","286,000","Singapore(41%) Malaysia(24%)\nIndia(11%) UAE(12%) Others(12%)","18,000","Malaysia(40%) Singapore(30%)\nUAE(16%) Others(14%)","50,000","UAE(40%) Oman(18%)\nSingapore(22%) Others(20%)","105,000","Saudi Arabia(50%) UAE(50%)","235,000","Qatar(64%) Oman(17%)\nUSA(17%) Others(2%)","107,000","USA(62%) UAE(12%)\nOman(10%) Others(16%)","620,000","Indonesia(60%) Australia(24%)\nS.Africa(12%) India(4%)","2026"],
+  ["Feb'26","313,000","Singapore(41%) Malaysia(24%)\nIndia(11%) UAE(12%) Others(12%)","19,000","Malaysia(40%) Singapore(30%)\nUAE(16%) Others(14%)","52,000","UAE(40%) Oman(18%)\nSingapore(22%) Others(20%)","95,000","Saudi Arabia(50%) UAE(50%)","228,000","Qatar(64%) Oman(17%)\nUSA(17%) Others(2%)","106,000","USA(62%) UAE(12%)\nOman(10%) Others(16%)","620,000","Indonesia(60%) Australia(24%)\nS.Africa(12%) India(4%)","2026"],
+  ["Mar'26","169,000","Singapore(41%) Malaysia(24%)\nIndia(11%) UAE(12%) Others(12%)","14,000","Malaysia(40%) Singapore(30%)\nUAE(16%) Others(14%)","35,000","UAE(30%) Singapore(30%)\nOthers(40%)","55,000","Saudi Arabia(50%) UAE(50%)","195,000","Qatar(60%) Oman(15%)\nUSA(17%) Others(8%)","183,000","USA(70%) Oman(20%)\nOthers(10%)","580,000","Indonesia(60%) Australia(24%)\nS.Africa(12%) India(4%)","2026"],
+  ["Apr'26","300,000","Singapore(41%) Malaysia(24%)\nIndia(11%) UAE(12%) Others(12%)","18,500","Malaysia(40%) Singapore(30%)\nUAE(16%) Others(14%)","45,000","UAE(35%) Singapore(28%)\nOthers(37%)","85,000","Saudi Arabia(55%) UAE(45%)","215,000","Qatar(62%) Oman(16%)\nUSA(17%) Others(5%)","130,000","USA(62%) UAE(10%)\nOman(15%) Others(13%)","580,000","Indonesia(60%) Australia(24%)\nS.Africa(12%) India(4%)","2026"]
+];
+
+function cell(vol, src) {
+  var lines = src.split('\n');
+  return '<td><span class="vol">' + vol + '</span><span class="src">' + lines.join('<br>') + '</span></td>';
+}
+
+function render() {
+  var yr = document.getElementById('yrSel').value;
+  var mon = document.getElementById('monSel').value.toLowerCase().trim();
+  var tb = document.getElementById('tb');
+  var html = '';
+  var count = 0;
+  for (var i = 0; i < D.length; i++) {
+    var r = D[i];
+    if (yr && r[15] !== yr) continue;
+    if (mon && r[0].toLowerCase().indexOf(mon) === -1) continue;
+    count++;
+    html += '<tr><td class="mon">' + r[0] + '</td>';
+    for (var j = 1; j <= 14; j += 2) {
+      html += cell(r[j], r[j+1]);
+    }
+    html += '</tr>';
+  }
+  tb.innerHTML = html;
+  document.getElementById('empty').style.display = count === 0 ? 'block' : 'none';
+}
+
+document.getElementById('yrSel').addEventListener('change', render);
+document.getElementById('monSel').addEventListener('input', render);
+render();
+</script>
